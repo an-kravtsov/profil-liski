@@ -1,0 +1,161 @@
+app Publications
+	
+	class Category
+		name
+		description
+		category_first = FK self + related_name="" # can be null if it is the top level categories
+		category_second = FK self + related_name="" # can be null if it is the top level categories
+		category_third = FK self + related_name="" # can be null if it is the top level categories
+	
+	class Publication (Product)
+		#доска объявлений #новости события города
+		category = FK Category
+		name
+		description
+		
+		faq # can be null
+		location # can be null
+			
+		is_active = Boolean	# post must be verified before publishing
+		created = datetime
+		updated = datetime
+		
+		is_top # for "top" on the picture
+		is_new # for "new" on the picture	
+
+	class PublicationImage
+		publication = FK Publication
+		image
+		is_main
+		is_active
+		created
+	
+	class Company
+			
+	class Avto
+		#авто купить машину
+		publication = FK Publication
+		price = decimal
+		created
+		release_date = datetime
+		milege		
+		car_engine = choisefield (1.2, 1.6, ...)
+		engine_power = decimal
+		type_car_body = choisefield
+		enginie_type = choisefield("бензин", "дизель", "газ")
+		transmission = choisefield("механика авто")
+		drive_unit = choisefield("передний", "задний")
+		color		
+		steering_wheel = choisefield
+		num_doors = choisefield(1-5)
+		car_condition = choisefield("битый", "требует косметических работ", "хорошее")
+		is_conditioner = boolfield("да", "нет")
+		owners = int
+	
+	class Apartament
+		#недвижимость аренда
+		publication = FK Publication
+		price = decimal
+		created
+		rooms_num = int
+		floor = int
+		build_type = choisefield("кирпичный", "панельный", "другое")
+		balcon_num = int
+		year_build = datetime
+		s_total = int
+		s_living = int
+		s_kitchen = int
+		is_lift = boolfield
+		is_internet = boolfield
+		is_conditioner = boolfield
+		
+	class vacancies
+		#вакансии
+		publication = FK Publication
+		company_name
+		necessary_education
+		expirience
+		shedule
+		address
+		phone
+		mail
+		duties
+		requirements
+				
+	class resume
+		#а нужны они?
+	
+	class Movies #can add or edit only AdminMovie)
+		#афиша кинотеатр
+		publication = FK Publication
+		date
+		genre
+		age
+		country
+		producer
+		расписание - ?
+	
+	class Events
+		#Новости события города
+		title
+		text_field
+
+app Publish
+
+	Class Status
+		name
+		is_active = boolfield
+		created = datetime
+		updated = datetime
+		
+	Class Publish(Order)
+		client = FK Client
+		total_price = decimal # price for all publication in publish
+		status = FK Status
+		created = datetime
+		updated = datetime
+		date_expiration = datetime
+	
+	class PublicationInPublish (ProductInOrder)
+		publish = FK Publish
+		publication = FK Publication
+		nmb = int
+		price_per_item = decimal
+		total_price = price_per_item * nmb
+		created = datetime
+		updated = datetime
+		
+app Reviews
+	# in process
+	class Review
+		publication = FK Publication
+		total_rating = DecimalField  # calculating from total review
+		#review.reviewitem_set.all()
+		
+	class ReviewItem
+		review = FK Review
+		user = FK Client
+		text
+		rating = DecimalField
+		created = datetime
+		is_verified = Boolean	# post must be verified before publishing
+				
+app Clients
+
+	from django.contrib.auth.models import User
+	
+	class Client
+		user = FK User
+		name
+		phone
+		email
+		description
+		image
+		address
+		created = datetime
+		
+		is_active = BooleaField # disable/enable user
+	
+	
+	# Нужна ли строгая авторизация
+	
