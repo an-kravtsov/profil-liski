@@ -1,12 +1,10 @@
-app Publications
+﻿app Publications
 	
 	class Category
 		name
 		description
-		category_first = FK self + related_name="" # can be null if it is the top level categories
-		category_second = FK self + related_name="" # can be null if it is the top level categories
-		category_third = FK self + related_name="" # can be null if it is the top level categories
-	
+		category_parent = FK self + related_name="" # can be null if it is the top level categories
+		
 	class Publication (Product)
 		#доска объявлений #новости события города
 		category = FK Category
@@ -19,24 +17,27 @@ app Publications
 		is_active = Boolean	# post must be verified before publishing
 		created = datetime
 		updated = datetime
+		user_created = FK Client
+		user_updated = FK Client
+		user_moderator FK Client		# whos verify the post
 		
 		is_top # for "top" on the picture
 		is_new # for "new" on the picture	
-
+	
 	class PublicationImage
 		publication = FK Publication
 		image
 		is_main
 		is_active
+		user_created = FK Client
 		created
-	
+	#!!
 	class Company
-			
+	
 	class Avto
 		#авто купить машину
 		publication = FK Publication
-		price = decimal
-		created
+		price = decimal		
 		release_date = datetime
 		milege		
 		car_engine = choisefield (1.2, 1.6, ...)
@@ -56,7 +57,6 @@ app Publications
 		#недвижимость аренда
 		publication = FK Publication
 		price = decimal
-		created
 		rooms_num = int
 		floor = int
 		build_type = choisefield("кирпичный", "панельный", "другое")
@@ -68,8 +68,8 @@ app Publications
 		is_lift = boolfield
 		is_internet = boolfield
 		is_conditioner = boolfield
-		
-	class vacancies
+	
+	class Vacancies
 		#вакансии
 		publication = FK Publication
 		company_name
@@ -81,7 +81,7 @@ app Publications
 		mail
 		duties
 		requirements
-				
+	#!!		
 	class resume
 		#а нужны они?
 	
@@ -93,7 +93,7 @@ app Publications
 		age
 		country
 		producer
-		расписание - ?
+		расписание - ?!!!!!!!!
 	
 	class Events
 		#Новости события города
@@ -101,44 +101,48 @@ app Publications
 		text_field
 
 app Publish
-
+	
 	Class Status
 		name
 		is_active = boolfield
 		created = datetime
 		updated = datetime
-		
+	
 	Class Publish(Order)
 		client = FK Client
 		total_price = decimal # price for all publication in publish
-		status = FK Status
+		status = FK Status 
 		created = datetime
 		updated = datetime
 		date_expiration = datetime
 	
 	class PublicationInPublish (ProductInOrder)
 		publish = FK Publish
-		publication = FK Publication
-		nmb = int
-		price_per_item = decimal
-		total_price = price_per_item * nmb
+		publication = FK Publication		
+		price = deciaml 	# can be null
 		created = datetime
 		updated = datetime
-		
+		# need check
+		user_created = FK Client
+		user_updated = FK Client
+		user_moderator = FK Client		# whos verify the post
 app Reviews
-	# in process
+	
 	class Review
 		publication = FK Publication
 		total_rating = DecimalField  # calculating from total review
 		#review.reviewitem_set.all()
-		
+	
 	class ReviewItem
 		review = FK Review
-		user = FK Client
 		text
 		rating = DecimalField
 		created = datetime
-		is_verified = Boolean	# post must be verified before publishing
+		updated = datetime
+		is_active = Boolean			# post must be verified before publishing
+		user_created = FK Client
+		user_updated = FK Client
+		user_moderator = FK Client	# whos verify the post if NULL post need to verify
 				
 app Clients
 
